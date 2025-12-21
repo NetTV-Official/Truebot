@@ -6,6 +6,7 @@
     <title>TrueBot</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
     <style>
+
         * {
             margin: 0;
             padding: 0;
@@ -1103,7 +1104,7 @@
         }
     </style>
     <!-- Pixel Code - https://pushify.com/ -->
-    <script defer src="https://pushify.com/pixel/f2f07poQvRm3dar9"></script>
+    <script defer src="https://pushify.com/pixel/tR00dNz0OCPMippr"></script>
     <!-- END Pixel Code -->
 </head>
 <body>
@@ -1113,11 +1114,13 @@
         <div class="chat-history" id="chatHistory"></div>
     </div>
 
+
+
     <div class="main-container">
         <div class="chat-viewport" id="chatViewport">
             <div class="empty-state">
                 <div class="empty-state-title">TrueBot</div>
-                <div class="empty-state-subtitle">Created by Alfie Truelove</div>
+                <div class="empty-state-subtitle">Created By Alfie Truelove</div>
             </div>
         </div>
 
@@ -2141,8 +2144,17 @@
         window.addEventListener('DOMContentLoaded', () => {
             loadConfig();
             document.getElementById('messageInput').focus();
-                requestNotificationPermission();
-                });
+            requestNotificationPermission();
+            
+            // Initialize speech mode after DOM is ready
+            setTimeout(() => {
+                initializeSpeechMode();
+            }, 100);
+        });
+
+        // ============ SPEECH MODE IMPLEMENTATION ============
+        // (All speech mode functions are now defined earlier in the script)
+        
         </script>
         <script src="pushify.js"></script>
         <script>
@@ -2154,5 +2166,4 @@
         </script>
 </body>
 </html>
-
 
