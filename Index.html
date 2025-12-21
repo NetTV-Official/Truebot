@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chat</title>
+    <title>TrueBot</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
     <style>
         * {
@@ -1102,6 +1102,9 @@
             margin-top: 8px;
         }
     </style>
+    <!-- Pixel Code - https://pushify.com/ -->
+    <script defer src="https://pushify.com/pixel/tR00dNz0OCPMippr"></script>
+    <!-- END Pixel Code -->
 </head>
 <body>
     <div class="sidebar">
@@ -1113,8 +1116,8 @@
     <div class="main-container">
         <div class="chat-viewport" id="chatViewport">
             <div class="empty-state">
-                <div class="empty-state-title">AI Chat</div>
-                <div class="empty-state-subtitle">Start a conversation</div>
+                <div class="empty-state-title">TrueBot</div>
+                <div class="empty-state-subtitle">Created by Alfie Truelove</div>
             </div>
         </div>
 
@@ -1248,7 +1251,11 @@
         // Load configuration
         async function loadConfig() {
             try {
-                const response = await fetch('https://api.jsonbin.io/v3/b/6946cf5fae596e708fa723d4');
+                const response = await fetch('https://api.jsonbin.io/v3/b/6946cf5fae596e708fa723d4', {
+                    headers: {
+                        'X-Master-Key': '$2a$10$ItezqTQK.GpyyPNRc0xxven5OJWWirudjWbC9CEKbPsyQuj6h61KS'
+                    }
+                });
                 const data = await response.json();
                 config = data.record;
                 
