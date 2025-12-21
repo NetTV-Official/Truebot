@@ -2141,9 +2141,17 @@
         window.addEventListener('DOMContentLoaded', () => {
             loadConfig();
             document.getElementById('messageInput').focus();
-            requestNotificationPermission();
-        });
-    </script>
+                requestNotificationPermission();
+                });
+        </script>
+        <script src="pushify.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                if (typeof Pushify !== "undefined") {
+                    Pushify.subscribe();
+                }
+            });
+        </script>
 </body>
 </html>
 
