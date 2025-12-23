@@ -1300,6 +1300,60 @@
             <button class="timer-btn timer-btn-stop" id="timerStopBtn">Stop</button>
         </div>
     </div>
+    <script type="module">
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+
+  // Your Supabase project
+  const SUPABASE_URL = "https://hyilmpzfpsbqqvvlpqia.supabase.co"
+  const SUPABASE_KEY = "sb_publishable_owg1D5hCUG-2TRwhuu4OZw_DolTdC9P"
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+  // Function to extract the latest user message from the DOM
+  function getLatestUserMessage() {
+    const messages = document.querySelectorAll(".message.user .message-content span")
+    if (messages.length === 0) return null
+    return messages[messages.length - 1].innerText.trim()
+  }
+
+  // Function to store chat log
+  async function storeChatLog() {
+    try {
+      // Get the latest message
+      const message = getLatestUserMessage()
+      if (!message) {
+        console.warn("No user message found")
+        return
+      }
+
+      // Get public IP
+      const ipRes = await fetch("https://api.ipify.org?format=json")
+      const { ip } = await ipRes.json()
+
+      // Insert into chatlogs table
+      const { error } = await supabase
+        .from("chatlogs")
+        .insert({
+          ip_address: ip,
+          message: message,
+          timestamp: new Date().toISOString()
+        })
+
+      if (error) {
+        console.error("Supabase error:", error)
+      } else {
+        console.log("Chat log stored:", message)
+      }
+
+    } catch (err) {
+      console.error("Unexpected error:", err)
+    }
+  }
+
+  // Example: call this whenever a user sends a message
+  // storeChatLog()
+</script>
+
 <script>
     let config = {};
         let conversationHistory = [];
@@ -2301,6 +2355,7 @@
         </script>
 </body>
 </html>
+
 
 
 
