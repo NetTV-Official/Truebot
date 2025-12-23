@@ -1177,7 +1177,19 @@
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
-  // Device registration function
+  /* ---------------- COOKIE HELPERS ---------------- */
+  function setCookie(name, value, days) {
+    const d = new Date();
+    d.setTime(d.getTime() + (days*24*60*60*1000));
+    document.cookie = `${name}=${value};expires=${d.toUTCString()};path=/`;
+  }
+
+  function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? match[2] : null;
+  }
+
+  /* ---------------- DEVICE REGISTRATION ---------------- */
   async function registerDevice() {
     try {
       const deviceName = navigator.userAgent
@@ -1204,19 +1216,20 @@
     }
   }
 
-  // Cookie logic + auto-register
+  /* ---------------- COOKIE LOGIC ---------------- */
   const overlay = document.getElementById("cookieOverlay")
   const acceptBtn = document.getElementById("acceptCookies")
   const declineBtn = document.getElementById("declineCookies")
 
-  if (!localStorage.getItem("truebotCookiesAccepted")) {
-    overlay.style.display = "flex"
-  } else {
+  // If cookie exists → skip popup
+  if (getCookie("truebotAccepted") === "yes") {
     registerDevice()
+  } else {
+    overlay.style.display = "flex"
   }
 
   acceptBtn.onclick = () => {
-    localStorage.setItem("truebotCookiesAccepted", "yes")
+    setCookie("truebotAccepted", "yes", 365)
     overlay.style.display = "none"
     registerDevice()
   }
@@ -1225,7 +1238,6 @@
     window.location.href = "https://www.google.com"
   }
 </script>
-
 
     <div class="main-container">
         <div class="chat-viewport" id="chatViewport">
@@ -2275,6 +2287,7 @@
         </script>
 </body>
 </html>
+
 
 
 
