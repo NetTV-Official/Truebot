@@ -1300,65 +1300,7 @@
             <button class="timer-btn timer-btn-stop" id="timerStopBtn">Stop</button>
         </div>
     </div>
-<script type="module">
-  import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
-  const SUPABASE_URL = "https://hyilmpzfpsbqqvvlpqia.supabase.co"
-  const SUPABASE_KEY = "sb_publishable_owg1D5hCUG-2TRwhuu4OZw_DolTdC9P"
-
-  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
-
-  // Get latest user message
-  function getLatestUserMessage() {
-    const messages = document.querySelectorAll(".message.user .message-content span")
-    console.log("Found user messages:", messages.length)
-
-    if (messages.length === 0) {
-      console.warn("No user messages found in DOM")
-      return null
-    }
-
-    const msg = messages[messages.length - 1].innerText.trim()
-    console.log("Latest message:", msg)
-    return msg
-  }
-
-  // Store chat log
-  async function storeChatLog() {
-    console.log("storeChatLog() called")
-
-    const message = getLatestUserMessage()
-    if (!message) {
-      console.error("Message is null — aborting")
-      return
-    }
-
-    console.log("Fetching IP...")
-    const ipRes = await fetch("https://api.ipify.org?format=json")
-    const { ip } = await ipRes.json()
-    console.log("IP fetched:", ip)
-
-    console.log("Attempting Supabase insert...")
-
-    const { data, error } = await supabase
-      .from("chatlogs")
-      .insert({
-        ip_address: ip,
-        message: message,
-        timestamp: new Date().toISOString()
-      })
-      .select()
-
-    if (error) {
-      console.error("Supabase INSERT ERROR:", error)
-    } else {
-      console.log("Supabase INSERT SUCCESS:", data)
-    }
-  }
-
-  // Call this manually for now
-  window.storeChatLog = storeChatLog
-</script>
 
 
 <script>
@@ -2362,6 +2304,7 @@
         </script>
 </body>
 </html>
+
 
 
 
