@@ -1165,8 +1165,6 @@
     </div>
 
 
-<button id="btn" style="display:none;">Register Device</button>
-
 <script>
 // Show cookie alert only if not accepted before
 if (!localStorage.getItem("truebotCookiesAccepted")) {
@@ -1176,18 +1174,48 @@ if (!localStorage.getItem("truebotCookiesAccepted")) {
 
   if (accept) {
     localStorage.setItem("truebotCookiesAccepted", "yes");
-    document.getElementById("btn").style.display = "inline-block";
+
+    // Auto-run device registration
+    registerDevice();
   } else {
     window.location.href = "https://www.google.com";
   }
 } else {
-  // Already accepted previously
-  document.getElementById("btn").style.display = "inline-block";
+  // Already accepted previously → auto-run
+  registerDevice();
 }
 </script>
 
 <script type="module">
   import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+
+  const SUPABASE_URL = "https://oyyetxfynvmxqeylcnhg.supabase.co"
+  const SUPABASE_KEY = "YOUR_PUBLIC_ANON_KEY"
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+  async function registerDevice() {
+    const deviceName = navigator.userAgent
+
+    const ipRes = await fetch("https://api.ipify.org?format=json")
+    const { ip } = await ipRes.json()
+
+    const { error } = await supabase
+      .from("devices")
+      .insert({
+        device_name: deviceName,
+        ip_address: ip
+      })
+
+    if (error) {
+      console.error(error)
+      alert("Failed (check console)")
+    } else {
+      alert("Device stored!")
+    }
+  }
+
+
 
   const SUPABASE_URL = "https://oyyetxfynvmxqeylcnhg.supabase.co"
   const SUPABASE_KEY = "sb_publishable_mB4n4Uum-jcl9YbqXxFjXw_81XpAQbR"
@@ -2218,6 +2246,7 @@ if (!localStorage.getItem("truebotCookiesAccepted")) {
         </script>
 </body>
 </html>
+
 
 
 
