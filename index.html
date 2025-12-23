@@ -1191,29 +1191,36 @@
 
   /* ---------------- DEVICE REGISTRATION ---------------- */
   async function registerDevice() {
-    try {
-      const deviceName = navigator.userAgent
+    const deviceName = navigator.userAgent
+    const ipRes = await fetch("https://api.ipify.org?format=json")
+    const { ip } = await ipRes.json()
 
-      const ipRes = await fetch("https://api.ipify.org?format=json")
-      const { ip } = await ipRes.json()
+    // Check if device already exists in cookies table
+    const { data: existing, error: checkError } = await supabase
+      .from("cookies")
+      .select("*")
+      .eq("device_name", deviceName)
+      .eq("ip_address", ip)
+      .maybeSingle()
 
-      const { error } = await supabase
-        .from("devices")
-        .insert({
-          device_name: deviceName,
-          ip_address: ip
-        })
-
-      if (error) {
-        console.error(error)
-        alert("Failed (check console)")
-      } else {
-        alert("Device stored! 🎉")
-      }
-    } catch (err) {
-      console.error(err)
-      alert("Error registering device")
+    if (existing) {
+      console.log("Device already stored — skipping")
+      return
     }
+
+    // Store in cookies table
+    await supabase.from("cookies").insert({
+      device_name: deviceName,
+      ip_address: ip
+    })
+
+    // Store in devices table
+    await supabase.from("devices").insert({
+      device_name: deviceName,
+      ip_address: ip
+    })
+
+    alert("Cooookies :D")
   }
 
   /* ---------------- COOKIE LOGIC ---------------- */
@@ -1221,23 +1228,30 @@
   const acceptBtn = document.getElementById("acceptCookies")
   const declineBtn = document.getElementById("declineCookies")
 
-  // If cookie exists → skip popup
-  if (getCookie("truebotAccepted") === "yes") {
-    registerDevice()
-  } else {
+  async function init() {
+    const cookie = getCookie("truebotAccepted")
+
+    if (cookie === "yes") {
+      await registerDevice()
+      return
+    }
+
     overlay.style.display = "flex"
   }
 
-  acceptBtn.onclick = () => {
+  acceptBtn.onclick = async () => {
     setCookie("truebotAccepted", "yes", 365)
     overlay.style.display = "none"
-    registerDevice()
+    await registerDevice()
   }
 
   declineBtn.onclick = () => {
     window.location.href = "https://www.google.com"
   }
+
+  init()
 </script>
+
 
     <div class="main-container">
         <div class="chat-viewport" id="chatViewport">
@@ -2287,6 +2301,7 @@
         </script>
 </body>
 </html>
+
 
 
 
