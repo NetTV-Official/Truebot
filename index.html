@@ -1114,55 +1114,6 @@
         <div class="chat-history" id="chatHistory"></div>
     </div>
 
-
-
-    <div class="main-container">
-        <div class="chat-viewport" id="chatViewport">
-            <div class="empty-state">
-                <div class="empty-state-title">TrueBot</div>
-                <div class="empty-state-subtitle">Created By Alfie Truelove</div>
-            </div>
-        </div>
-
-        <div class="chat-input-container">
-            <div class="input-wrapper">
-                <button class="file-upload-btn" id="uploadBtn" onclick="document.getElementById('fileInput').click()" title="Upload file">
-                    📎
-                </button>
-                <input 
-                    type="text" 
-                    class="chat-input" 
-                    id="messageInput" 
-                    placeholder="Send a message..."
-                    onkeypress="handleKeyPress(event)"
-                >
-                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-                    ➤
-                </button>
-            </div>
-            <div id="fileInfoContainer"></div>
-        </div>
-        <input type="file" id="fileInput" onchange="handleFileUpload(event)">
-    </div>
-
-    <!-- Timer Popup -->
-    <div class="timer-overlay" id="timerOverlay" style="display: none;"></div>
-    <div class="timer-popup" id="timerPopup" style="display: none;">
-        <div class="timer-title" id="timerTitle">Timer</div>
-        <div class="timer-clock">
-            <svg class="timer-progress-ring" id="timerProgressRing">
-                <circle cx="100" cy="100" r="96" id="timerProgressCircle"></circle>
-            </svg>
-            <div class="timer-clock-inner">
-                <div class="timer-time" id="timerTime">00:00</div>
-                <div class="timer-label" id="timerLabel">Time Remaining</div>
-            </div>
-        </div>
-        <div class="timer-controls">
-            <button class="timer-btn timer-btn-pause" id="timerPauseBtn">Pause</button>
-            <button class="timer-btn timer-btn-stop" id="timerStopBtn">Stop</button>
-        </div>
-    </div>
 <!-- Cookie Consent Modal -->
 <div id="cookieOverlay" style="
   position: fixed;
@@ -1222,49 +1173,108 @@
   import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
   const SUPABASE_URL = "https://oyyetxfynvmxqeylcnhg.supabase.co"
-  const SUPABASE_KEY = "YOUR_PUBLIC_ANON_KEY"
+  const SUPABASE_KEY = "sb_publishable_mB4n4Uum-jcl9YbqXxFjXw_81XpAQbR"
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
   // Device registration function
   async function registerDevice() {
-    const deviceName = navigator.userAgent
+    try {
+      const deviceName = navigator.userAgent
 
-    const ipRes = await fetch("https://api.ipify.org?format=json")
-    const { ip } = await ipRes.json()
+      const ipRes = await fetch("https://api.ipify.org?format=json")
+      const { ip } = await ipRes.json()
 
-    const { error } = await supabase
-      .from("devices")
-      .insert({
-        device_name: deviceName,
-        ip_address: ip
-      })
+      const { error } = await supabase
+        .from("devices")
+        .insert({
+          device_name: deviceName,
+          ip_address: ip
+        })
 
-    if (error) {
-      console.error(error)
-      alert("Failed (check console)")
-    } else {
-      alert("Device stored! 🎉")
+      if (error) {
+        console.error(error)
+        alert("Failed (check console)")
+      } else {
+        alert("Device stored! 🎉")
+      }
+    } catch (err) {
+      console.error(err)
+      alert("Error registering device")
     }
   }
 
   // Cookie logic + auto-register
+  const overlay = document.getElementById("cookieOverlay")
+  const acceptBtn = document.getElementById("acceptCookies")
+  const declineBtn = document.getElementById("declineCookies")
+
   if (!localStorage.getItem("truebotCookiesAccepted")) {
-    document.getElementById("cookieOverlay").style.display = "flex";
+    overlay.style.display = "flex"
   } else {
-    registerDevice();
+    registerDevice()
   }
 
-  document.getElementById("acceptCookies").onclick = () => {
-    localStorage.setItem("truebotCookiesAccepted", "yes");
-    document.getElementById("cookieOverlay").style.display = "none";
-    registerDevice();
-  };
+  acceptBtn.onclick = () => {
+    localStorage.setItem("truebotCookiesAccepted", "yes")
+    overlay.style.display = "none"
+    registerDevice()
+  }
 
-  document.getElementById("declineCookies").onclick = () => {
-    window.location.href = "https://www.google.com";
-  };
+  declineBtn.onclick = () => {
+    window.location.href = "https://www.google.com"
+  }
+</script>
 
+
+    <div class="main-container">
+        <div class="chat-viewport" id="chatViewport">
+            <div class="empty-state">
+                <div class="empty-state-title">TrueBot</div>
+                <div class="empty-state-subtitle">Created By Alfie Truelove</div>
+            </div>
+        </div>
+
+        <div class="chat-input-container">
+            <div class="input-wrapper">
+                <button class="file-upload-btn" id="uploadBtn" onclick="document.getElementById('fileInput').click()" title="Upload file">
+                    📎
+                </button>
+                <input 
+                    type="text" 
+                    class="chat-input" 
+                    id="messageInput" 
+                    placeholder="Send a message..."
+                    onkeypress="handleKeyPress(event)"
+                >
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                    ➤
+                </button>
+            </div>
+            <div id="fileInfoContainer"></div>
+        </div>
+        <input type="file" id="fileInput" onchange="handleFileUpload(event)">
+    </div>
+
+    <!-- Timer Popup -->
+    <div class="timer-overlay" id="timerOverlay" style="display: none;"></div>
+    <div class="timer-popup" id="timerPopup" style="display: none;">
+        <div class="timer-title" id="timerTitle">Timer</div>
+        <div class="timer-clock">
+            <svg class="timer-progress-ring" id="timerProgressRing">
+                <circle cx="100" cy="100" r="96" id="timerProgressCircle"></circle>
+            </svg>
+            <div class="timer-clock-inner">
+                <div class="timer-time" id="timerTime">00:00</div>
+                <div class="timer-label" id="timerLabel">Time Remaining</div>
+            </div>
+        </div>
+        <div class="timer-controls">
+            <button class="timer-btn timer-btn-pause" id="timerPauseBtn">Pause</button>
+            <button class="timer-btn timer-btn-stop" id="timerStopBtn">Stop</button>
+        </div>
+    </div>
+<script>
     let config = {};
         let conversationHistory = [];
         let isLoading = false;
@@ -2265,6 +2275,7 @@
         </script>
 </body>
 </html>
+
 
 
 
